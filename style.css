@@ -1,0 +1,93 @@
+body {
+  background-color: #121212;
+  color: #f5f5f5;
+}
+.array-element {
+  transition: all 0.3s ease;
+  background-color: #232323;
+  border: 1px solid #2c2c2c;
+}
+.checked-element {
+  background-color: #10b981 !important;
+  color: #121212 !important;
+  border: 2px solid #10b981;
+}
+.current-element {
+  background-color: #3b82f6 !important;
+  color: #fff !important;
+  border: 2px solid #3b82f6;
+}
+.searched-element {
+  background-color: #f59e0b !important;
+  color: #fff !important;
+  border: 2px solid #f59e0b;
+}
+.disabled-element {
+  opacity: 0.3;
+  filter: grayscale(0.7);
+}
+.modern-input {
+  background: #232323;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: border 0.2s;
+}
+.modern-input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+.modern-slider {
+  accent-color: #3b82f6;
+  background: #232323;
+}
+.modern-card {
+  background: #181818;
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+  border: 1px solid #232323;
+}
+.modern-btn {
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+.modern-btn:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+}
+.modern-btn-green {
+  background: #10b981;
+  color: #121212;
+}
+.modern-btn-green:hover {
+  background: #059669;
+  color: #fff;
+}
+.modern-label {
+  color: #f5f5f5;
+  font-weight: 500;
+}
+.modern-status {
+  background: #232323;
+  color: #f5f5f5;
+  border-radius: 0.75rem;
+  border: 1px solid #2c2c2c;
+}
+.modern-legend {
+  background: #232323;
+  color: #f5f5f5;
+  border-radius: 0.5rem;
+  border: 1px solid #2c2c2c;
+}
+.prose {
+  color: #e5e5e5;
+}
+.prose strong {
+  color: #fff;
+}

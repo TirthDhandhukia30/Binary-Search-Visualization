@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binary Search Visualizer</title>
+
+    <!-- Tailwind + Icons + AOS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+      body {
+        background-color: #121212;
+        color: #f5f5f5;
+        font-family: "Outfit", system-ui, -apple-system, sans-serif;
+      }
+
+      .modern-card {
+        background: #181818;
+        border: 1px solid #232323;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      .modern-input {
+        background: #232323;
+        color: #f5f5f5;
+        border: 1px solid #333;
+        padding: 0.5rem 1rem;
+      }
+
+      .modern-input:focus {
+        border-color: #3b82f6;
+        outline: none;
+      }
+
+      .modern-slider {
+        accent-color: #3b82f6;
+        background: #232323;
+      }
+
+      .modern-btn {
+        background: #3b82f6;
+        color: #fff;
+        padding: 0.5rem 1.2rem;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+
+      .modern-btn:hover {
+        background: #2563eb;
+      }
+
+      .modern-btn-green {
+        background: #10b981;
+      }
+
+      .modern-btn-green:hover {
+        background: #059669;
+      }
+
+      .array-element {
+        transition: all 0.3s ease;
+        background-color: #232323;
+        border: 1px solid #333;
+      }
+
+      .checked-element {
+        background-color: #10b981 !important;
+        color: #fff !important;
+      }
+
+      .current-element {
+        background-color: #3b82f6 !important;
+        color: #fff !important;
+      }
+
+      .searched-element {
+        background-color: #f59e0b !important;
+        color: #fff !important;
+      }
+
+      .disabled-element {
+        opacity: 0.3;
+      }
+
+      .modern-status {
+        background: #232323;
+        border: 1px solid #333;
+      }
+
+      .modern-legend {
+        background: #232323;
+        border: 1px solid #333;
+      }
+
+      .interactive-step {
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: background-color 0.2s;
+      }
+
+      .interactive-step:hover {
+        background-color: #2a2a2a;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-[#121212] text-[#f5f5f5]">
+    <div class="container mx-auto px-4 py-8">
+      <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-2 text-white">
+          Binary Search Visualizer
+        </h1>
+        <p class="text-lg text-gray-300">
+          Understand how binary search works through interactive visualization
+        </p>
+      </header>
+
+      <!-- Control Panel -->
+      <div class="max-w-4xl mx-auto modern-card p-8 mb-8">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4"
+        >
+          <!-- Array Size -->
+          <div class="w-full md:w-auto mb-4 md:mb-0">
+            <label class="modern-label block text-sm mb-1">Array Size</label>
+            <input
+              type="range"
+              id="arraySize"
+              min="5"
+              max="20"
+              value="10"
+              class="modern-slider w-full h-2 appearance-none cursor-pointer"
+            />
+            <div class="flex justify-between text-xs text-gray-400">
+              <span>5</span><span>20</span>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex space-x-2">
+            <button id="generateArray" class="modern-btn flex items-center">
+              <i data-feather="refresh-cw" class="inline mr-1"></i> Generate
+            </button>
+            <button
+              id="startSearch"
+              class="modern-btn modern-btn-green flex items-center"
+            >
+              <i data-feather="play" class="inline mr-1"></i> Search
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Input -->
+        <div class="w-full md:w-auto mb-4 md:mb-0">
+          <label class="modern-label block text-sm mb-1">Target Value</label>
+          <input
+            type="number"
+            id="targetValue"
+            min="1"
+            max="100"
+            placeholder="Enter target"
+            class="modern-input w-full"
+          />
+        </div>
+
+        <!-- Array Display -->
+        <div
+          id="arrayContainer"
+          class="flex justify-center flex-wrap gap-2 mb-8 mt-8"
+        ></div>
+
+        <!-- Status -->
+        <div class="modern-status p-4">
+          <h3 class="font-medium mb-2 flex items-center text-white">
+            <i data-feather="info" class="mr-2"></i> Algorithm Status
+          </h3>
+          <div id="statusText" class="text-gray-300">
+            Generate an array and enter a target value to visualize the binary
+            search.
+          </div>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <div class="flex items-center modern-legend px-2 py-1">
+              <div class="w-4 h-4 bg-blue-600 mr-1"></div>
+              <span class="text-xs">Current Middle</span>
+            </div>
+            <div class="flex items-center modern-legend px-2 py-1">
+              <div class="w-4 h-4 bg-green-500 mr-1"></div>
+              <span class="text-xs">Target Found</span>
+            </div>
+            <div class="flex items-center modern-legend px-2 py-1">
+              <div class="w-4 h-4 bg-yellow-500 mr-1"></div>
+              <span class="text-xs">Searched Element</span>
+            </div>
+            <div class="flex items-center modern-legend px-2 py-1">
+              <div class="w-4 h-4 bg-gray-500 mr-1"></div>
+              <span class="text-xs">Eliminated Range</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="max-w-4xl mx-auto modern-card p-8 mt-8">
+        <h2
+          class="text-2xl font-bold mb-6 text-white border-b border-gray-800 pb-2"
+        >
+          How Binary Search Works
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-6 text-gray-200">
+          <!-- Left column: Visual explanation -->
+          <div>
+            <div class="mb-5">
+              <h3 class="text-xl font-bold mb-3">Visual Explanation</h3>
+              <p class="mb-2">
+                Binary search works by repeatedly dividing the search space in
+                half:
+              </p>
+
+              <div class="bg-[#1d1d1d] border border-[#333] p-4 mb-4">
+                <div
+                  class="flex justify-between mb-2 border-b border-[#333] pb-2"
+                >
+                  <span>Sorted Array:</span>
+                  <span class="text-blue-400"
+                    >[10, 20, 30, 40, 50, 60, 70]</span
+                  >
+                </div>
+
+                <div class="mb-2">
+                  <div class="flex justify-between mb-1">
+                    <span>Search for 30:</span>
+                    <span>Compare with middle (40)</span>
+                  </div>
+                  <div class="flex space-x-1">
+                    <span class="bg-[#232323] px-2 py-1 border border-[#333]"
+                      >10</span
+                    >
+                    <span class="bg-[#232323] px-2 py-1 border border-[#333]"
+                      >20</span
+                    >
+                    <span class="bg-[#232323] px-2 py-1 border border-[#333]"
+                      >30</span
+                    >
+                    <span class="bg-blue-500 px-2 py-1 border border-blue-600"
+                      >40</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >50</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >60</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >70</span
+                    >
+                  </div>
+                  <div class="mt-1 text-yellow-500">
+                    30 < 40, search left half
+                  </div>
+                </div>
+
+                <div class="mb-2">
+                  <div class="flex space-x-1">
+                    <span class="bg-[#232323] px-2 py-1 border border-[#333]"
+                      >10</span
+                    >
+                    <span class="bg-blue-500 px-2 py-1 border border-blue-600"
+                      >20</span
+                    >
+                    <span class="bg-[#232323] px-2 py-1 border border-[#333]"
+                      >30</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >40</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >50</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >60</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >70</span
+                    >
+                  </div>
+                  <div class="mt-1 text-yellow-500">
+                    30 > 20, search right half
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex space-x-1">
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >10</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >20</span
+                    >
+                    <span class="bg-green-500 px-2 py-1 border border-green-600"
+                      >30</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >40</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >50</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >60</span
+                    >
+                    <span
+                      class="bg-[#232323] px-2 py-1 border border-[#333] opacity-50"
+                      >70</span
+                    >
+                  </div>
+                  <div class="mt-1 text-green-500">Found 30!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column: Algorithm details -->
+          <div>
+            <div class="mb-5">
+              <h3 class="text-xl font-bold mb-3">Algorithm Steps</h3>
+              <ol class="space-y-2 mb-4">
+                <li class="flex interactive-step">
+                  <span class="font-mono mr-2">1.</span>
+                  <span>Start with the middle element of the sorted array</span>
+                </li>
+                <li class="flex interactive-step">
+                  <span class="font-mono mr-2">2.</span>
+                  <span
+                    >If target equals middle element, search is complete</span
+                  >
+                </li>
+                <li class="flex interactive-step">
+                  <span class="font-mono mr-2">3.</span>
+                  <span>If target < middle, search left half</span>
+                </li>
+                <li class="flex interactive-step">
+                  <span class="font-mono mr-2">4.</span>
+                  <span>If target > middle, search right half</span>
+                </li>
+                <li class="flex interactive-step">
+                  <span class="font-mono mr-2">5.</span>
+                  <span>Repeat until found or range is empty</span>
+                </li>
+              </ol>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold mb-3">Performance</h3>
+              <div class="flex flex-col space-y-2">
+                <div class="flex justify-between">
+                  <span>Time Complexity:</span>
+                  <span class="font-mono text-blue-400">O(log n)</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Space Complexity:</span>
+                  <span class="font-mono text-blue-400">O(1)</span>
+                </div>
+                <div class="mt-2 border-t border-[#333] pt-2">
+                  <span class="font-semibold block mb-1">Key Advantage:</span>
+                  <span
+                    >Extremely efficient for large datasets - can search through
+                    a million elements in just ~20 comparisons</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
